@@ -15,8 +15,8 @@ MODELS_PATH = '/media/n31v/data/models'
 SVD_PARAMS = {
     'energy_thresholds': [0.1, 0.3, 0.5, 0.7, 0.9, 0.93, 0.96, 0.99, 0.999],
     'decomposing_mode': ['channel', 'spatial'],
-    'hoer_loss_factor': [0.1, 0.01, 0.001, 0.0001],
-    'orthogonal_loss_factor': [1, 10, 100, 1000]
+    'hoer_loss_factor': [0.1, 0.01, 0.001],
+    'orthogonal_loss_factor': [1, 10, 100]
 }
 SFP_PARAMS = {
     'percentage': [{'pruning_ratio': p} for p in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]],
