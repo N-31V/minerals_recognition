@@ -13,9 +13,10 @@ def run(
         mode: str = 'base',
         folds: List[int] = [0, 1, 2, 3, 4],
 ) -> None:
+    dataset, ds_folds = task['dataset']()
     for fold in folds:
-        fold0 = Subset(dataset=task['dataset'], indices=task['folds'][fold, 0, :])
-        fold1 = Subset(dataset=task['dataset'], indices=task['folds'][fold, 1, :])
+        fold0 = Subset(dataset=dataset, indices=ds_folds[fold, 0, :])
+        fold1 = Subset(dataset=dataset, indices=ds_folds[fold, 1, :])
         for i, train_ds, val_ds in [(0, fold0, fold1), (1, fold1, fold0)]:
             for f_params in task['fit_params']:
                 fit_params = FitParameters(
