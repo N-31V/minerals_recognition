@@ -83,7 +83,7 @@ def run(
 f = [0, 1, 2, 3, 4]
 # f = [0]
 start_t = datetime.now()
-for t in ['MNIST', '']:
+for t in ['MNIST', 'FashionMNIST', 'CIFAR10']:
     run(TASKS[t], folds=f)
     run(TASKS[t], mode='svd', folds=f)
     run(TASKS[t], mode='sfp', folds=f)

@@ -47,7 +47,7 @@ def get_cifar():
         root=os.path.join(DATASETS_ROOT, 'CIFAR10'),
         transform=Compose([
             ToTensor(),
-            Resize(28),
+            Resize((28, 28), antialias=True),
             Normalize(mean=(0.4914, 0.4822, 0.4465), std=(0.247, 0.2435, 0.2616))
         ])
     )

@@ -9,27 +9,28 @@ class SimpleConvNet3(torch.nn.Module):
         num_classes: number of classes.
         in_channels: The number of input channels of the first layer.
     """
+
     def __init__(
             self,
             num_classes: int,
             in_channels: int = 3,
-            hidden1 = 32,
-            hidden2 = 64,
-            hidden3 = 128,
+            hidden1: int = 32,
+            hidden2: int = 64,
+            hidden3: int = 128,
     ):
         super().__init__()
         self.layer1 = torch.nn.Sequential(
-            torch.nn.Conv2d(in_channels, hidden1, kernel_size=5, stride=1, padding=2),
+            torch.nn.Conv2d(in_channels, hidden1, kernel_size=5, padding=2),
             torch.nn.ReLU(),
             torch.nn.MaxPool2d(kernel_size=2, stride=2),
         )
         self.layer2 = torch.nn.Sequential(
-            torch.nn.Conv2d(hidden1, hidden2, kernel_size=5, stride=1, padding=2),
+            torch.nn.Conv2d(hidden1, hidden2, kernel_size=5, padding=2),
             torch.nn.ReLU(),
             torch.nn.MaxPool2d(kernel_size=2, stride=2),
         )
         self.layer3 = torch.nn.Sequential(
-            torch.nn.Conv2d(hidden2, hidden3, kernel_size=7, stride=1),
+            torch.nn.Conv2d(hidden2, hidden3, kernel_size=7),
             torch.nn.ReLU(),
         )
         self.drop_out = torch.nn.Dropout()
