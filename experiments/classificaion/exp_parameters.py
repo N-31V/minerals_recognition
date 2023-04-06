@@ -1,4 +1,5 @@
 import os
+from typing import Optional, Tuple
 
 import numpy as np
 from torch.optim.lr_scheduler import StepLR
@@ -53,6 +54,18 @@ def get_cifar():
     )
     folds = np.load(os.path.join(DATASETS_ROOT, 'CIFAR10', 'folds.npy'))
     return ds, folds
+
+
+def get_image_folder(dataset: str, transforms):
+    def get_ds():
+        ds = ImageFolder(
+            root=os.path.join(DATASETS_ROOT, dataset),
+            transform=transforms
+        )
+        folds = np.load(os.path.join(DATASETS_ROOT, dataset, 'folds.npy'))
+        return ds, folds
+
+    return get_ds
 
 
 TASKS = {
@@ -116,6 +129,40 @@ TASKS = {
             'zeroing': SFP_PARAMS,
             'final_pruning_fn': prune_simple_conv_net,
             'model_class': SimpleConvNet3,
+        },
+    },
+    'LUSC': {
+        'ds_name': 'LUSC',
+        'dataset': get_image_folder(
+            dataset='Land-Use_Scene_Classification/images',
+            transforms=Compose([
+                ToTensor(),
+                Resize((200, 200), antialias=True),
+                Normalize(mean=(0.458, 0.467, 0.437), std=(0.289, 0.281, 0.270))
+            ])),
+        'dataloader_params': {'batch_size': 32, 'num_workers': 8},
+        'model': resnet18,
+        'model_name': 'ResNet18',
+        'model_params': {'num_classes': 21},
+        'fit_params': [
+            {
+                'num_epochs': 50,
+                'lr_scheduler': StepLR,
+                'lr_scheduler_params': {'step_size': 10, 'gamma': 0.2, 'verbose': True},
+                'models_path': MODELS_PATH,
+            }
+        ],
+        'ft_params':
+            {
+                'num_epochs': 10,
+                'optimizer_params': {'lr': 0.001},
+                'lr_scheduler': StepLR,
+                'lr_scheduler_params': {'step_size': 2, 'gamma': 0.2, 'verbose': True},
+                'models_path': MODELS_PATH,
+            },
+        'svd_params': SVD_PARAMS,
+        'sfp_params': {
+            'zeroing': SFP_PARAMS,
         },
     },
 }

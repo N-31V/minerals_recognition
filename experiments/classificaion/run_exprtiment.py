@@ -83,8 +83,8 @@ def run(
 f = [0, 1, 2, 3, 4]
 # f = [0]
 start_t = datetime.now()
-for t in ['MNIST', 'FashionMNIST', 'CIFAR10']:
+for t in ['LUSC']:
     run(TASKS[t], folds=f)
     run(TASKS[t], mode='svd', folds=f)
     run(TASKS[t], mode='sfp', folds=f)
-print(f'Total time: {datetime.now()-start_t}')
+print(f'Total time: {datetime.now() - start_t}')
