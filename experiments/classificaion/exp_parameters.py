@@ -137,7 +137,7 @@ TASKS = {
             transforms=Compose([
                 ToTensor(),
                 Resize((200, 200), antialias=True),
-                Normalize(mean=(0.459, 0.468, 0.437), std=(0.288, 0.280, 0.269))
+                Normalize(mean=(0.462, 0.471, 0.440), std=(0.287, 0.279, 0.269))
             ])),
         'dataloader_params': {'batch_size': 32, 'num_workers': 8},
         'model': resnet18,
@@ -169,7 +169,7 @@ TASKS = {
             dataset='minerals_21_200',
             transforms=Compose([
                 ToTensor(),
-                Normalize(mean=(0.537, 0.610, 0.514), std=(0.220, 0.232, 0.225))
+                Normalize(mean=(0.54, 0.61, 0.51), std=(0.22, 0.23, 0.23))
             ])),
         'dataloader_params': {'batch_size': 32, 'num_workers': 8},
         'model': resnet18,
