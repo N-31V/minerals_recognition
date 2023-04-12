@@ -119,7 +119,6 @@ TASKS = {
         'ft_params':
             {
                 'num_epochs': 6,
-                'optimizer_params': {'lr': 0.001},
                 'lr_scheduler': StepLR,
                 'lr_scheduler_params': {'step_size': 2, 'gamma': 0.2, 'verbose': True},
                 'models_path': MODELS_PATH,
@@ -138,7 +137,7 @@ TASKS = {
             transforms=Compose([
                 ToTensor(),
                 Resize((200, 200), antialias=True),
-                Normalize(mean=(0.458, 0.467, 0.437), std=(0.289, 0.281, 0.270))
+                Normalize(mean=(0.459, 0.468, 0.437), std=(0.288, 0.280, 0.269))
             ])),
         'dataloader_params': {'batch_size': 32, 'num_workers': 8},
         'model': resnet18,
@@ -146,18 +145,49 @@ TASKS = {
         'model_params': {'num_classes': 21},
         'fit_params': [
             {
-                'num_epochs': 50,
+                'num_epochs': 30,
                 'lr_scheduler': StepLR,
-                'lr_scheduler_params': {'step_size': 10, 'gamma': 0.2, 'verbose': True},
+                'lr_scheduler_params': {'step_size': 3, 'gamma': 0.5},
                 'models_path': MODELS_PATH,
             }
         ],
         'ft_params':
             {
-                'num_epochs': 10,
-                'optimizer_params': {'lr': 0.001},
+                'num_epochs': 6,
                 'lr_scheduler': StepLR,
-                'lr_scheduler_params': {'step_size': 2, 'gamma': 0.2, 'verbose': True},
+                'lr_scheduler_params': {'step_size': 1, 'gamma': 0.5, 'verbose': True},
+                'models_path': MODELS_PATH,
+            },
+        'svd_params': SVD_PARAMS,
+        'sfp_params': {
+            'zeroing': SFP_PARAMS,
+        },
+    },
+    'minerals200': {
+        'ds_name': 'minerals200',
+        'dataset': get_image_folder(
+            dataset='minerals_21_200',
+            transforms=Compose([
+                ToTensor(),
+                Normalize(mean=(0.537, 0.610, 0.514), std=(0.220, 0.232, 0.225))
+            ])),
+        'dataloader_params': {'batch_size': 32, 'num_workers': 8},
+        'model': resnet18,
+        'model_name': 'ResNet18',
+        'model_params': {'num_classes': 21},
+        'fit_params': [
+            {
+                'num_epochs': 30,
+                'lr_scheduler': StepLR,
+                'lr_scheduler_params': {'step_size': 3, 'gamma': 0.5},
+                'models_path': MODELS_PATH,
+            }
+        ],
+        'ft_params':
+            {
+                'num_epochs': 6,
+                'lr_scheduler': StepLR,
+                'lr_scheduler_params': {'step_size': 1, 'gamma': 0.5, 'verbose': True},
                 'models_path': MODELS_PATH,
             },
         'svd_params': SVD_PARAMS,
