@@ -7,7 +7,6 @@ from torchvision.transforms import Compose, ToTensor, Resize, Normalize
 from torchvision.datasets import ImageFolder, MNIST, CIFAR10, FashionMNIST
 from torchvision.models import resnet18, resnet50, resnet101
 
-from core.models.cnn.classification_models import resnet18_one_channel
 from simple_conv_net import SimpleConvNet3, prune_simple_conv_net
 
 DATASETS_ROOT = '/media/n31v/data/datasets'
@@ -24,6 +23,31 @@ SFP_PARAMS = {
     'energy': [{'energy_threshold': e} for e in [0.9, 0.93, 0.96, 0.99, 0.999]],
 }
 
+MIDL_GROUP_PARAMS = {
+    'dataloader_params': {'batch_size': 32, 'num_workers': 8},
+    'model': resnet18,
+    'model_name': 'ResNet18',
+    'model_params': {'num_classes': 21},
+    'fit_params': [
+        {
+            'num_epochs': 30,
+            'lr_scheduler': StepLR,
+            'lr_scheduler_params': {'step_size': 3, 'gamma': 0.5},
+            'models_path': MODELS_PATH,
+        }
+    ],
+    'ft_params':
+        {
+            'num_epochs': 6,
+            'lr_scheduler': StepLR,
+            'lr_scheduler_params': {'step_size': 1, 'gamma': 0.5},
+            'models_path': MODELS_PATH,
+        },
+    'svd_params': SVD_PARAMS,
+    'sfp_params': {
+        'zeroing': SFP_PARAMS,
+    }
+}
 
 def get_mnist():
     ds = MNIST(
@@ -139,29 +163,7 @@ TASKS = {
                 Resize((200, 200), antialias=True),
                 Normalize(mean=(0.462, 0.471, 0.440), std=(0.287, 0.279, 0.269))
             ])),
-        'dataloader_params': {'batch_size': 32, 'num_workers': 8},
-        'model': resnet18,
-        'model_name': 'ResNet18',
-        'model_params': {'num_classes': 21},
-        'fit_params': [
-            {
-                'num_epochs': 30,
-                'lr_scheduler': StepLR,
-                'lr_scheduler_params': {'step_size': 3, 'gamma': 0.5},
-                'models_path': MODELS_PATH,
-            }
-        ],
-        'ft_params':
-            {
-                'num_epochs': 6,
-                'lr_scheduler': StepLR,
-                'lr_scheduler_params': {'step_size': 1, 'gamma': 0.5, 'verbose': True},
-                'models_path': MODELS_PATH,
-            },
-        'svd_params': SVD_PARAMS,
-        'sfp_params': {
-            'zeroing': SFP_PARAMS,
-        },
+        **MIDL_GROUP_PARAMS
     },
     'minerals200': {
         'ds_name': 'minerals200',
@@ -169,30 +171,9 @@ TASKS = {
             dataset='minerals_21_200',
             transforms=Compose([
                 ToTensor(),
+                Resize((200, 200), antialias=True),
                 Normalize(mean=(0.54, 0.61, 0.51), std=(0.22, 0.23, 0.23))
             ])),
-        'dataloader_params': {'batch_size': 32, 'num_workers': 8},
-        'model': resnet18,
-        'model_name': 'ResNet18',
-        'model_params': {'num_classes': 21},
-        'fit_params': [
-            {
-                'num_epochs': 30,
-                'lr_scheduler': StepLR,
-                'lr_scheduler_params': {'step_size': 3, 'gamma': 0.5},
-                'models_path': MODELS_PATH,
-            }
-        ],
-        'ft_params':
-            {
-                'num_epochs': 6,
-                'lr_scheduler': StepLR,
-                'lr_scheduler_params': {'step_size': 1, 'gamma': 0.5, 'verbose': True},
-                'models_path': MODELS_PATH,
-            },
-        'svd_params': SVD_PARAMS,
-        'sfp_params': {
-            'zeroing': SFP_PARAMS,
-        },
+        **MIDL_GROUP_PARAMS
     },
 }
