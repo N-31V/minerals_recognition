@@ -97,7 +97,7 @@ def ssd_task(train_ds, val_ds, dl_params, ds_name):
 TASKS = {
     'ssd': ssd_task(*get_dataset(batch_size=64), ds_name='binary_small'),
     'rcnn_big': fasterrcnn_task(*get_dataset(batch_size=8, resize=(922, 1228)), ds_name='binary_big'),
-    'rcnn_small': fasterrcnn_task(*get_dataset(batch_size=16, resize=(320, 320)), ds_name='binary_small')
+    'rcnn_small': fasterrcnn_task(*get_dataset(batch_size=8, resize=(320, 320)), ds_name='binary_small')
 }
 
 
