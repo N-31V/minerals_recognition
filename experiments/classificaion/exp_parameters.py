@@ -10,7 +10,7 @@ from torchvision.models import resnet18, resnet50, resnet101
 from simple_conv_net import SimpleConvNet3, prune_simple_conv_net
 
 DATASETS_ROOT = '/media/n31v/data/datasets'
-MODELS_PATH = '/media/n31v/data/models'
+RESULT_PATH = '/media/n31v/data/results'
 
 SVD_PARAMS = {
     'energy_thresholds': [0.1, 0.3, 0.5, 0.7, 0.9, 0.93, 0.96, 0.99, 0.999],
@@ -33,7 +33,8 @@ MIDL_GROUP_PARAMS = {
             'num_epochs': 30,
             'lr_scheduler': StepLR,
             'lr_scheduler_params': {'step_size': 3, 'gamma': 0.5},
-            'models_path': MODELS_PATH,
+            'models_path': RESULT_PATH,
+            'summary_path': RESULT_PATH,
         }
     ],
     'ft_params':
@@ -41,7 +42,8 @@ MIDL_GROUP_PARAMS = {
             'num_epochs': 6,
             'lr_scheduler': StepLR,
             'lr_scheduler_params': {'step_size': 1, 'gamma': 0.5},
-            'models_path': MODELS_PATH,
+            'models_path': RESULT_PATH,
+            'summary_path': RESULT_PATH,
         },
     'svd_params': SVD_PARAMS,
     'sfp_params': {
@@ -100,8 +102,8 @@ TASKS = {
         'model': SimpleConvNet3,
         'model_name': 'SimpleConvNet',
         'model_params': {'num_classes': 10, 'in_channels': 1},
-        'fit_params': [{'num_epochs': 10, 'models_path': MODELS_PATH}],
-        'ft_params': {'num_epochs': 3, 'models_path': MODELS_PATH},
+        'fit_params': [{'num_epochs': 10, 'models_path': RESULT_PATH, 'summary_path': RESULT_PATH}],
+        'ft_params': {'num_epochs': 3, 'models_path': RESULT_PATH, 'summary_path': RESULT_PATH},
         'svd_params': SVD_PARAMS,
         'sfp_params': {
             'zeroing': SFP_PARAMS,
@@ -116,8 +118,8 @@ TASKS = {
         'model': SimpleConvNet3,
         'model_name': 'SimpleConvNet',
         'model_params': {'num_classes': 10, 'in_channels': 1},
-        'fit_params': [{'num_epochs': 10, 'models_path': MODELS_PATH}],
-        'ft_params': {'num_epochs': 3, 'models_path': MODELS_PATH},
+        'fit_params': [{'num_epochs': 10, 'models_path': RESULT_PATH, 'summary_path': RESULT_PATH}],
+        'ft_params': {'num_epochs': 3, 'models_path': RESULT_PATH, 'summary_path': RESULT_PATH},
         'svd_params': SVD_PARAMS,
         'sfp_params': {
             'zeroing': SFP_PARAMS,
@@ -137,7 +139,8 @@ TASKS = {
                 'num_epochs': 20,
                 'lr_scheduler': StepLR,
                 'lr_scheduler_params': {'step_size': 5, 'gamma': 0.2, 'verbose': True},
-                'models_path': MODELS_PATH,
+                'models_path': RESULT_PATH,
+                'summary_path': RESULT_PATH,
             }
         ],
         'ft_params':
@@ -145,7 +148,8 @@ TASKS = {
                 'num_epochs': 6,
                 'lr_scheduler': StepLR,
                 'lr_scheduler_params': {'step_size': 2, 'gamma': 0.2, 'verbose': True},
-                'models_path': MODELS_PATH,
+                'models_path': RESULT_PATH,
+                'summary_path': RESULT_PATH,
             },
         'svd_params': SVD_PARAMS,
         'sfp_params': {
@@ -175,5 +179,43 @@ TASKS = {
                 Normalize(mean=(0.54, 0.61, 0.51), std=(0.22, 0.23, 0.23))
             ])),
         **MIDL_GROUP_PARAMS
+    },
+    'LUSC_resnet50': {
+        'ds_name': 'LUSC',
+        'dataset': get_image_folder(
+            dataset='Land-Use_Scene_Classification/images',
+            transforms=Compose([
+                ToTensor(),
+                Resize((200, 200), antialias=True),
+                Normalize(mean=(0.462, 0.471, 0.440), std=(0.287, 0.279, 0.269))
+            ])),
+        'dataloader_params': {'batch_size': 32, 'num_workers': 8},
+        'model': resnet50,
+        'model_name': 'ResNet50',
+        'model_params': {'num_classes': 21},
+        'fit_params': [
+            {
+                'num_epochs': 30,
+                'lr_scheduler': StepLR,
+                'lr_scheduler_params': {'step_size': 3, 'gamma': 0.5},
+                'models_path': RESULT_PATH,
+                'summary_path': RESULT_PATH,
+            }
+        ],
+        'ft_params':
+            {
+                'num_epochs': 6,
+                'lr_scheduler': StepLR,
+                'lr_scheduler_params': {'step_size': 1, 'gamma': 0.5},
+                'models_path': RESULT_PATH,
+                'summary_path': RESULT_PATH,
+            },
+        'svd_params': {
+            'energy_thresholds': [0.9, 0.99],
+            'decomposing_mode': ['channel', 'spatial'],
+            'hoer_loss_factor': [0.1],
+            'orthogonal_loss_factor': [10]
+        },
+        'sfp_params': {}
     },
 }
