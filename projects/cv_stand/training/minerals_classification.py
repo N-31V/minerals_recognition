@@ -31,7 +31,7 @@ experimenter = ClassificationExperimenter(
     name='ResNet18'
 )
 
-dl_params={'batch_size': 16, 'num_workers': 8}
+dl_params = {'batch_size': 16, 'num_workers': 8}
 
 fit_params = FitParameters(
     dataset_name='classification/minerals200_n_big',
@@ -46,4 +46,4 @@ fit_params = FitParameters(
 
 start_t = datetime.now()
 experimenter.fit(p=fit_params)
-print(f'Total time: {datetime.now()-start_t}')
+print(f'Total time: {datetime.now() - start_t}')

@@ -4,6 +4,7 @@ from datetime import datetime
 from core.operation.optimization.structure_optimization import SFPOptimization, SVDOptimization
 from config import TASKS, EXPS
 
+
 def run_base(at, ad):
     task = TASKS[at](ad)
     task['exp'].fit(p=task['fit_params'])
@@ -57,14 +58,13 @@ OPTIM = {
 }
 
 
-if __name__== "__main__":
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog='Minerals')
     parser.add_argument('-t', '--task', type=str, required=True)
     parser.add_argument('-d', '--device', type=str, required=True)
-    parser.add_argument('-e', '--exps', type=str, required=True)
     args = parser.parse_args()
 
     start_t = datetime.now()
-    for opt, params in EXPS[args.exps].items():
+    for opt, params in EXPS:
         OPTIM[opt](args.task, args.device, **params)
     print(f'Total time: {datetime.now() - start_t}')
