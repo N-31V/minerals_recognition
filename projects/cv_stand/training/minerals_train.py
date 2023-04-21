@@ -1,7 +1,7 @@
 import argparse
 from datetime import datetime
 
-from core.operation.optimization.structure_optimization import SFPOptimization, SVDOptimization
+from fedot_ind.core.operation.optimization.structure_optimization import SFPOptimization, SVDOptimization
 from config import TASKS, EXPS
 
 
@@ -61,10 +61,11 @@ OPTIM = {
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog='Minerals')
     parser.add_argument('-t', '--task', type=str, required=True)
+    parser.add_argument('-e', '--experiments', type=str, required=True)
     parser.add_argument('-d', '--device', type=str, required=True)
     args = parser.parse_args()
 
     start_t = datetime.now()
-    for opt, params in EXPS:
+    for opt, params in EXPS[args.experiments]:
         OPTIM[opt](args.task, args.device, **params)
     print(f'Total time: {datetime.now() - start_t}')
