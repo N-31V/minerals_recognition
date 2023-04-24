@@ -58,7 +58,7 @@ def get_classification_dataset(
                 Resize((200, 200), antialias=True)
             ]))
         train_ds, val_ds = train_test_split(dataset)
-        dl_params = {'batch_size': 16, 'num_workers': 8}
+        dl_params = {'batch_size': batch_size, 'num_workers': 8}
         return train_ds, val_ds, dl_params
 
     return get_dataset
@@ -146,10 +146,9 @@ def resnet_task(get_dataset, ds_name):
                 dataset_name=f'classification/{ds_name}',
                 train_dl=DataLoader(train_ds, shuffle=True, **dl_params),
                 val_dl=DataLoader(val_ds, **dl_params),
-                num_epochs=30,
-                optimizer_params={'lr': 0.005},
+                num_epochs=50,
                 lr_scheduler=StepLR,
-                lr_scheduler_params={'step_size': 10, 'gamma': 0.5},
+                lr_scheduler_params={'step_size': 5, 'gamma': 0.5},
                 class_metrics=True,
                 models_path=RESULT_PATH,
                 summary_path=RESULT_PATH,
@@ -159,7 +158,6 @@ def resnet_task(get_dataset, ds_name):
                 train_dl=DataLoader(train_ds, shuffle=True, **dl_params),
                 val_dl=DataLoader(val_ds, **dl_params),
                 num_epochs=10,
-                optimizer_params={'lr': 0.005},
                 lr_scheduler=StepLR,
                 lr_scheduler_params={'step_size': 3, 'gamma': 0.5},
                 models_path=RESULT_PATH,
