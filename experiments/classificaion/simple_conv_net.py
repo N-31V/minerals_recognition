@@ -1,6 +1,6 @@
 import torch
 
-from core.operation.optimization.sfp_tools import _check_nonzero_filters, _prune_filters
+from fedot_ind.core.operation.optimization.sfp_tools import _check_nonzero_filters, _prune_filters
 
 
 class SimpleConvNet3(torch.nn.Module):
