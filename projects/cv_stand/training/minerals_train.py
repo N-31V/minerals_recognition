@@ -1,9 +1,12 @@
 import argparse
 from datetime import datetime
+import logging
 
 from fedot_ind.core.operation.optimization.structure_optimization import SFPOptimization, SVDOptimization
 from minerals_config import TASKS, EXPS
 
+
+logging.basicConfig(level=logging.INFO)
 
 def run_base(at, ad):
     task = TASKS[at](ad)
