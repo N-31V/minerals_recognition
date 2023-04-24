@@ -65,9 +65,8 @@ def get_classification_dataset(
 
 
 def fasterrcnn_task(get_dataset, ds_name):
-    train_ds, val_ds, dl_params = get_dataset()
-
     def f_task(device):
+        train_ds, val_ds, dl_params = get_dataset()
         return {
             'exp': ObjectDetectionExperimenter(
                 model=fasterrcnn_resnet50_fpn(num_classes=2),
@@ -101,9 +100,8 @@ def fasterrcnn_task(get_dataset, ds_name):
 
 
 def ssd_task(get_dataset, ds_name):
-    train_ds, val_ds, dl_params = get_dataset()
-
     def s_task(device):
+        train_ds, val_ds, dl_params = get_dataset()
         return {
             'exp': ObjectDetectionExperimenter(
                 model=ssdlite320_mobilenet_v3_large(num_classes=2),
@@ -136,9 +134,8 @@ def ssd_task(get_dataset, ds_name):
 
 
 def resnet_task(get_dataset, ds_name):
-    train_ds, val_ds, dl_params = get_dataset()
-
     def r_task(device):
+        train_ds, val_ds, dl_params = get_dataset()
         return {
             'exp': ClassificationExperimenter(
                 model=resnet18(num_classes=24),
