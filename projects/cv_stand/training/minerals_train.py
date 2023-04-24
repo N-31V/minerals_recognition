@@ -2,7 +2,7 @@ import argparse
 from datetime import datetime
 
 from fedot_ind.core.operation.optimization.structure_optimization import SFPOptimization, SVDOptimization
-from config import TASKS, EXPS
+from minerals_config import TASKS, EXPS
 
 
 def run_base(at, ad):

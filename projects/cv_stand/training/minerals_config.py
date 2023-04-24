@@ -1,6 +1,6 @@
 from typing import Optional, Tuple
 import torch
-from torchvision.transforms import Compose, ToTensor, Resize
+from torchvision.transforms import Compose, ToTensor, Resize, ColorJitter, RandomPerspective, RandomHorizontalFlip, RandomVerticalFlip
 from torchvision.datasets import ImageFolder
 from torchvision.models import resnet18
 from torchvision.models.detection.ssdlite import ssdlite320_mobilenet_v3_large
@@ -10,6 +10,9 @@ from torch.utils.data import DataLoader, random_split
 from fedot_ind.core.architecture.experiment.nn_experimenter import ObjectDetectionExperimenter, FitParameters, ClassificationExperimenter
 from fedot_ind.core.architecture.datasets.object_detection_datasets import YOLODataset
 from fedot_ind.core.architecture.datasets.splitters import train_test_split
+
+
+RESULT_PATH = 'results'
 
 
 def get_detection_dataset(
@@ -44,6 +47,10 @@ def get_classification_dataset(
         root='/media/n31v/data/datasets/minerals_200',
         transform=Compose([
             ToTensor(),
+            RandomHorizontalFlip(),
+            RandomVerticalFlip(),
+            ColorJitter(0.0005, 0.0005, 0.0005, 0.0),
+            RandomPerspective(0.6, 1.0),
             Resize((200, 200), antialias=True)
         ]))
     train_ds, val_ds = train_test_split(dataset)
@@ -66,6 +73,8 @@ def fasterrcnn_task(train_ds, val_ds, dl_params, ds_name):
                 optimizer_params={'lr': 0.005},
                 lr_scheduler=StepLR,
                 lr_scheduler_params={'step_size': 10, 'gamma': 0.5},
+                models_path=RESULT_PATH,
+                summary_path=RESULT_PATH,
             ),
             'ft_params': FitParameters(
                 dataset_name=f'detection/{ds_name}',
@@ -75,6 +84,8 @@ def fasterrcnn_task(train_ds, val_ds, dl_params, ds_name):
                 optimizer_params={'lr': 0.0001},
                 lr_scheduler=StepLR,
                 lr_scheduler_params={'step_size': 3, 'gamma': 0.5},
+                models_path=RESULT_PATH,
+                summary_path=RESULT_PATH,
             )
         }
 
@@ -95,6 +106,8 @@ def ssd_task(train_ds, val_ds, dl_params, ds_name):
                 num_epochs=300,
                 lr_scheduler=StepLR,
                 lr_scheduler_params={'step_size': 10, 'gamma': 0.5},
+                models_path=RESULT_PATH,
+                summary_path=RESULT_PATH,
             ),
             'ft_params': FitParameters(
                 dataset_name=f'detection/{ds_name}',
@@ -104,6 +117,8 @@ def ssd_task(train_ds, val_ds, dl_params, ds_name):
                 optimizer_params={'lr': 0.005},
                 lr_scheduler=StepLR,
                 lr_scheduler_params={'step_size': 3, 'gamma': 0.5},
+                models_path=RESULT_PATH,
+                summary_path=RESULT_PATH,
             )
         }
 
@@ -126,7 +141,9 @@ def resnet_task(train_ds, val_ds, dl_params, ds_name):
                 optimizer_params={'lr': 0.005},
                 lr_scheduler=StepLR,
                 lr_scheduler_params={'step_size': 10, 'gamma': 0.5},
-                class_metrics=True
+                class_metrics=True,
+                models_path=RESULT_PATH,
+                summary_path=RESULT_PATH,
             ),
             'ft_params': FitParameters(
                 dataset_name=f'classification/{ds_name}',
@@ -136,6 +153,8 @@ def resnet_task(train_ds, val_ds, dl_params, ds_name):
                 optimizer_params={'lr': 0.005},
                 lr_scheduler=StepLR,
                 lr_scheduler_params={'step_size': 3, 'gamma': 0.5},
+                models_path=RESULT_PATH,
+                summary_path=RESULT_PATH,
             )
         }
 
