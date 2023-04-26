@@ -51,11 +51,11 @@ def get_classification_dataset(
             root='/media/n31v/data/datasets/minerals_200',
             transform=Compose([
                 ToTensor(),
+                Resize((200, 200), antialias=True),
                 RandomHorizontalFlip(),
                 RandomVerticalFlip(),
                 ColorJitter(0.0005, 0.0005, 0.0005, 0.0),
-                RandomPerspective(0.6, 1.0),
-                Resize((200, 200), antialias=True)
+                # RandomPerspective(0.6, 1.0),
             ]))
         train_ds, val_ds = train_test_split(dataset)
         dl_params = {'batch_size': batch_size, 'num_workers': 8}
