@@ -1,12 +1,14 @@
 from datetime import datetime
 from typing import Dict, Type, List
+import logging
 
 from torch.utils.data import DataLoader, Subset
 
-from core.architecture.experiment.nn_experimenter import ClassificationExperimenter, FitParameters
-from core.operation.optimization.structure_optimization import SFPOptimization, SVDOptimization
+from fedot_ind.core.architecture.experiment.nn_experimenter import ClassificationExperimenter, FitParameters
+from fedot_ind.core.operation.optimization.structure_optimization import SFPOptimization, SVDOptimization
 from exp_parameters import TASKS
 
+logging.basicConfig(level=logging.INFO)
 
 def run_base(task, fit_params, ft_params):
     exp = ClassificationExperimenter(
