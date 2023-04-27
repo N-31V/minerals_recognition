@@ -41,7 +41,7 @@ MIDL_GROUP_PARAMS = {
         {
             'num_epochs': 6,
             'lr_scheduler': StepLR,
-            'lr_scheduler_params': {'step_size': 1, 'gamma': 0.5},
+            'lr_scheduler_params': {'step_size': 2, 'gamma': 0.5},
             'models_path': RESULT_PATH,
             'summary_path': RESULT_PATH,
         },
