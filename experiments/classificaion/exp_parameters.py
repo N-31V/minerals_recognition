@@ -32,7 +32,7 @@ MIDL_GROUP_PARAMS = {
         {
             'num_epochs': 30,
             'lr_scheduler': StepLR,
-            'lr_scheduler_params': {'step_size': 3, 'gamma': 0.5},
+            'lr_scheduler_params': {'step_size': 10, 'gamma': 0.2},
             'models_path': RESULT_PATH,
             'summary_path': RESULT_PATH,
         }
@@ -41,7 +41,7 @@ MIDL_GROUP_PARAMS = {
         {
             'num_epochs': 6,
             'lr_scheduler': StepLR,
-            'lr_scheduler_params': {'step_size': 2, 'gamma': 0.5},
+            'lr_scheduler_params': {'step_size': 2, 'gamma': 0.2},
             'models_path': RESULT_PATH,
             'summary_path': RESULT_PATH,
         },
@@ -170,7 +170,7 @@ TASKS = {
         **MIDL_GROUP_PARAMS
     },
     'minerals200': {
-        'ds_name': 'minerals200',
+        'ds_name': 'minerals200_10_02',
         'dataset': get_image_folder(
             dataset='minerals_21_200',
             transforms=Compose([
