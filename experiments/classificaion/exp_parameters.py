@@ -4,7 +4,7 @@ from typing import Optional, Tuple
 import numpy as np
 from torch.optim.lr_scheduler import StepLR
 from torchvision.transforms import Compose, ToTensor, Resize, Normalize
-from torchvision.datasets import ImageFolder, MNIST, CIFAR10, FashionMNIST
+from torchvision.datasets import ImageFolder, MNIST, CIFAR10, FashionMNIST, ImageNet
 from torchvision.models import resnet18, resnet50, resnet101
 
 from simple_conv_net import SimpleConvNet3, prune_simple_conv_net
@@ -82,6 +82,27 @@ def get_cifar():
     return ds, folds
 
 
+def get_imagenet():
+    train_ds = ImageNet(
+        root=os.path.join(DATASETS_ROOT, 'ImageNet'),
+        transform=Compose([
+            ToTensor(),
+            Resize((500, 500), antialias=True),
+            Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225))
+        ])
+    )
+    val_ds = ImageNet(
+        root=os.path.join(DATASETS_ROOT, 'ImageNet'),
+        split='val',
+        transform=Compose([
+            ToTensor(),
+            Resize((500, 500), antialias=True),
+            Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225))
+        ])
+    )
+    return train_ds, val_ds
+
+
 def get_image_folder(dataset: str, transforms):
     def get_ds():
         ds = ImageFolder(
@@ -94,7 +115,48 @@ def get_image_folder(dataset: str, transforms):
     return get_ds
 
 
+TEST_SVD_PARAMS = {
+    'ds_name': 'LUSC_SVD',
+    'dataset': get_image_folder(
+        dataset='Land-Use_Scene_Classification/images',
+        transforms=Compose([
+            ToTensor(),
+            Resize((200, 200), antialias=True),
+            Normalize(mean=(0.462, 0.471, 0.440), std=(0.287, 0.279, 0.269))
+        ])),
+    'dataloader_params': {'batch_size': 32, 'num_workers': 8},
+    'model_params': {'num_classes': 21},
+    'fit_params': [
+        {
+            'num_epochs': 50,
+            'optimizer_params': {'lr': 0.0005},
+            'lr_scheduler': StepLR,
+            'lr_scheduler_params': {'step_size': 15, 'gamma': 0.2},
+            'models_path': RESULT_PATH,
+            'summary_path': RESULT_PATH,
+        }
+    ],
+    'ft_params':
+        {
+            'num_epochs': 10,
+            'optimizer_params': {'lr': 0.0005},
+            'lr_scheduler': StepLR,
+            'lr_scheduler_params': {'step_size': 3, 'gamma': 0.2},
+            'models_path': RESULT_PATH,
+            'summary_path': RESULT_PATH,
+        },
+    'svd_params': {
+        'energy_thresholds': [0.9, 0.99],
+        'decomposing_mode': ['channel', 'spatial'],
+        'hoer_loss_factor': [0.1],
+        'orthogonal_loss_factor': [10]
+    },
+    'sfp_params': {}
+}
+
+
 TASKS = {
+
     'MNIST': {
         'ds_name': 'MNIST',
         'dataset': get_mnist,
@@ -111,6 +173,7 @@ TASKS = {
             'model_class': SimpleConvNet3,
         },
     },
+
     'FashionMNIST': {
         'ds_name': 'FashionMNIST',
         'dataset': get_fashion,
@@ -127,6 +190,7 @@ TASKS = {
             'model_class': SimpleConvNet3,
         },
     },
+
     'CIFAR10': {
         'ds_name': 'CIFAR10',
         'dataset': get_cifar,
@@ -158,6 +222,8 @@ TASKS = {
             'model_class': SimpleConvNet3,
         },
     },
+
+
     'LUSC': {
         'ds_name': 'LUSC',
         'dataset': get_image_folder(
@@ -169,6 +235,7 @@ TASKS = {
             ])),
         **MIDL_GROUP_PARAMS
     },
+
     'minerals200': {
         'ds_name': 'minerals200_10_02',
         'dataset': get_image_folder(
@@ -180,42 +247,49 @@ TASKS = {
             ])),
         **MIDL_GROUP_PARAMS
     },
+
+
+    'LUSC_resnet18': {
+        **TEST_SVD_PARAMS,
+        'model': resnet18,
+        'model_name': 'ResNet18',
+    },
     'LUSC_resnet50': {
-        'ds_name': 'LUSC',
-        'dataset': get_image_folder(
-            dataset='Land-Use_Scene_Classification/images',
-            transforms=Compose([
-                ToTensor(),
-                Resize((200, 200), antialias=True),
-                Normalize(mean=(0.462, 0.471, 0.440), std=(0.287, 0.279, 0.269))
-            ])),
-        'dataloader_params': {'batch_size': 32, 'num_workers': 8},
+        **TEST_SVD_PARAMS,
         'model': resnet50,
         'model_name': 'ResNet50',
-        'model_params': {'num_classes': 21},
+    },
+
+
+    'ImageNet': {
+        'ds_name': 'ImageNet',
+        'dataset': get_imagenet,
+        'dataloader_params': {'batch_size': 16, 'num_workers': 8},
+        'model': resnet50,
+        'model_name': 'ResNet50',
+        'model_params': {'num_classes': 1000},
         'fit_params': [
             {
-                'num_epochs': 30,
+                'num_epochs': 50,
+                'optimizer_params': {'lr': 0.0005},
                 'lr_scheduler': StepLR,
-                'lr_scheduler_params': {'step_size': 3, 'gamma': 0.5},
+                'lr_scheduler_params': {'step_size': 15, 'gamma': 0.2},
                 'models_path': RESULT_PATH,
                 'summary_path': RESULT_PATH,
             }
         ],
         'ft_params':
             {
-                'num_epochs': 6,
+                'num_epochs': 10,
+                'optimizer_params': {'lr': 0.0005},
                 'lr_scheduler': StepLR,
-                'lr_scheduler_params': {'step_size': 1, 'gamma': 0.5},
+                'lr_scheduler_params': {'step_size': 3, 'gamma': 0.2},
                 'models_path': RESULT_PATH,
                 'summary_path': RESULT_PATH,
             },
-        'svd_params': {
-            'energy_thresholds': [0.9, 0.99],
-            'decomposing_mode': ['channel', 'spatial'],
-            'hoer_loss_factor': [0.1],
-            'orthogonal_loss_factor': [10]
+        'svd_params': SVD_PARAMS,
+        'sfp_params': {
+            'zeroing': SFP_PARAMS,
         },
-        'sfp_params': {}
     },
 }
