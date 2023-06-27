@@ -14,7 +14,7 @@ dataset = ImageFolder(root=dataset_path, transform=ToTensor())
 idx_to_class = {v: k for k, v in dataset.class_to_idx.items()}
 
 model = resnet18(num_classes=24)
-model.load_state_dict(torch.load('training/models/classification/minerals200/ResNet18/train.sd.pt'))
+model.load_state_dict(torch.load('../../training/models/classification/minerals200/ResNet18/train.sd.pt'))
 model.eval()
 
 target_layers = [model.layer4[-1]]
